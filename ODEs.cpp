@@ -11,7 +11,7 @@ double funcion2y(double t, double x, double y,double vx, double vy);
 
 
 int main () {
-    int n=50000;
+    int n=1000;
     double tinicio=0;
     double tfin=1;
     double dt=(tfin-tinicio)/n;
@@ -79,116 +79,159 @@ int main () {
     }
     
     
-    //leap frog
+    //##########################################leap frog
+     double tlf[n];
     
+    
+    double x_1lf[n];
+    double x_2lf[n];
+    double y_1lf[n];
+    double y_2lf[n];
+    
+    double rlf[n];
     
         //Se toman las condiciones 
-    t[0]=tinicio;
-    t[1]=tinicio + h
+    tlf[0]=tinicio;
+    tlf[1]=tinicio + dt;
+    
+    x_1lf[0]= 0.1163;
+    y_1lf[0]= 0.9772;
+
+    rlf[0]= sqrt(x_1lf[0]*x_1lf[0]+y_1lf[0]*y_1lf[0]);
+    
+    
+    
+    x_2lf[0]=-6.35;
+    y_2lf[0]=0.606;
+    
+    x_1lf[1]= x_1lf[0]+dt*funcion1x(tlf[0], x_1lf[0], x_2lf[0]);
+    y_1lf[1]= y_1lf[0]+dt*funcion1y(tlf[0], x_1lf[0], x_2lf[0]);
+    
+    x_2lf[1]= x_2lf[0]+dt*funcion2x(tlf[0],x_1lf[0],y_1lf[0],x_2lf[0],y_2lf[0]);
+    y_2lf[1]= y_2lf[0]+dt*funcion2y(tlf[0],x_1lf[0],y_1lf[0],x_2lf[0],y_2lf[0]);
+
+
+    
+    ofstream leapfrog;
+    leapfrog.open ("OrbitaLF.txt");
+    for (int i=2;i<n;i++){
+        tlf[i] = t[i-1] + dt;
+
+        double x_prima_1 = funcion1x(tlf[i-1],x_1lf[i-1],x_2lf[i-1]);
+        double y_prima_1 = funcion1y(tlf[i-1],y_1lf[i-1],y_2lf[i-1]);
+            
+            
+  
+        x_1lf[i] = x_1lf[i-2] + 2*dt*x_prima_1;
+        y_1lf[i] = y_1lf[i-2] + 2*dt*y_prima_1;
+        
+        
+
+        double x_prima_2 = funcion2x(tlf[i-1],x_1lf[i-1],y_1lf[i-1],x_2lf[i-1],y_2lf[i-1]);
+        double y_prima_2 = funcion2y(tlf[i-1],x_1lf[i-1],y_1lf[i-1],x_2lf[i-1],y_2lf[i-1]);
+            
+ 
+        x_2lf[i] = x_2lf[i-2] + 2*dt*x_prima_2;  
+        y_2lf[i] = y_2lf[i-2] + 2*dt*y_prima_2;
+
+        
+        rlf[i]=sqrt(x_1lf[i]*x_1lf[i]+y_1lf[i]*y_1lf[i]);
+        leapfrog <<tlf[i]<< " " << x_1lf[i] << " " << y_1lf[i] << " " << x_2lf[i]<< " " << y_2lf[i] << " " << rlf[i] <<"\n";
+    }
+    
+        
+    //##################################Runge Kutta 4to orden
+        
+    
+    
+    ofstream kutta;
+    kutta.open ("OrbitaRK.txt");
     
     x_1[0]= 0.1163;
     y_1[0]= 0.9772;
-
     r[0]= sqrt(x_1[0]*x_1[0]+y_1[0]*y_1[0]);
-    
     
     
     x_2[0]=-6.35;
     y_2[0]=0.606;
     
-    x_1[1]= x_1[0]+h*funcion1x(t[0], x_1[0], x_2[0])
-    y_1[1]= y_1[0]+h*funcion1y(t[0], x_1[0], x_2[0])
-    
-    x_2[1]= x_2[0]+h*funcion2x(t[0],x_1[0],y_1[0],x_2[0],y_2[0])
-    y_2[1]= y_2[0]+h*funcion2y(t[0],x_1[0],y_1[0],x_2[0],y_2[0])
-
-
+       
     
     
-    for (int i=1;i<n;i++){
-        
-
-        double x_prima_1 = funcion1x(t[i-1],x_1[i-1],x_2[i-1]);
-        double y_prima_1 = funcion1y(t[i-1],y_1[i-1],y_2[i-1]);
-            
-            
-        t[i+1] = t[i-1] + dt;
-        x_1[i] = x_1[i-1] + dt*x_prima_1;
-        y_1[i] = y_1[i-1] + dt*y_prima_1;
-        
-        
-
-            
-            
-        double x_prima_2 = funcion2x(t[i-1],x_1[i-1],y_1[i-1],x_2[i-1],y_2[i-1]);
-        double y_prima_2 = funcion2y(t[i-1],x_1[i-1],y_1[i-1],x_2[i-1],y_2[i-1]);
-            
- 
-        x_2[i] = x_2[i-1] + dt*x_prima_2;  
-        y_2[i] = y_2[i-1] + dt*y_prima_2;
-
-        
-        r[i]=sqrt(x_1[i]*x_1[i]+y_1[i]*y_1[i]);
-        euler <<t[i]<< " " << x_1[i] << " " << y_1[i] << " " << x_2[i]<< " " << y_2[i] << " " << r[i] <<"\n";
-    }
-    
-        
-    
-        
-      /*  
         
     for(int i=1;i<n;i++)
     {
-        double k1_1 = funcion1(x[i-1],t[i-1],v[i-1]);
-        double k1_2 = funcion2(x[i-1],t[i-1],v[i-1]);
-            
-        double t1 = t[i-1]+(h/2);
-        double x1 = x[i-1]+(h/2)*k1_1;
-        double v1 = v[i-1]+(h/2)*k1_2;
+        double k1_1x = funcion1x(t[i-1],x_1[i-1],x_2[i-1]);
+        double k1_1y = funcion1y(t[i-1],y_1[i-1],y_2[i-1]);
+        double k1_2x = funcion2x(t[i-1],x_1[i-1],y_1[i-1],x_2[i-1],y_2[i-1]);
+        double k1_2y = funcion2y(t[i-1],x_1[i-1],y_1[i-1],x_2[i-1],y_2[i-1]);
+
+        double t1 = t[i-1]+(dt/2);
+        double x1_1 = x_1[i-1]+(dt/2)*k1_1x;
+        double y1_1 = y_1[i-1]+(dt/2)*k1_1y;
+        double x1_2 = x_2[i-1]+(dt/2)*k1_2x;
+        double y1_2 = y_2[i-1]+(dt/2)*k1_2y;
+
         
-        double k2_1 = funcion1(x1,t1,v1);
-        double k2_2 = funcion2(x1,t1,v1);
+
         
-        double t2 = t[i-1]+(h/2);
-        double x2 = x[i-1]+(h/2) * k2_1;
-        double v2 = v[i-1]+(h/2) * k2_2;
-            
-            
-        double k3_1 = funcion1(x2, t2, v2);
-        double k3_2 = funcion2(x2, t2, v2);
+        double k2_1x = funcion1x(t1,x1_1,x1_2);
+        double k2_1y = funcion1y(t1,y1_1,y1_2);
+        double k2_2x = funcion2x(t1,x1_1,y1_1,x1_2,y1_2);
+        double k2_2y = funcion2y(t1,x1_1,y1_1,x1_2,y1_2);
+
         
-        double t3 = t[i-1]+h;
-        double x3 = x[i-1]+h*k3_1;
-        double v3 = v[i-1]+h*k3_2;
+
+        
+        double t2 = t[i-1]+(dt/2);
+        double x2_1 = x_1[i-1]+(dt/2)*k2_1x;
+        double y2_1 = y_1[i-1]+(dt/2)*k2_1y;
+        double x2_2 = x_2[i-1]+(dt/2)*k2_2x;
+        double y2_2 = y_2[i-1]+(dt/2)*k2_2y;
         
         
-        double k4_1 = funcion1(x3,t3,v3);
-        double k4_2 = funcion2(x3,t3,v3);
+        double k3_1x = funcion1x(t2,x2_1,x2_2);
+        double k3_1y = funcion1y(t2,y2_1,y2_2);
+        double k3_2x = funcion2x(t2,x2_1,y2_1,x2_2,y2_2);
+        double k3_2y = funcion2y(t2,x2_1,y2_1,x2_2,y2_2);
+
         
-        double k1prom = (1.0/6.0)*(k1_1 + 2.0*k2_1 + 2.0*k3_1 + k4_1);
-        double k2prom = (1.0/6.0)*(k1_2 + 2.0*k2_2 + 2.0*k3_2 + k4_2);
+
+        
+        double t3 = t[i-1]+dt;
+        double x3_1 = x_1[i-1]+dt*k3_1x;
+        double y3_1 = y_1[i-1]+dt*k3_1y;
+        double x3_2 = x_2[i-1]+dt*k3_2x;
+        double y3_2 = y_2[i-1]+dt*k3_2y;
+        
+        
+        
+        double k4_1x = funcion1x(t3,x3_1,x3_2);
+        double k4_1y = funcion1y(t3,y3_1,y3_2);
+        double k4_2x = funcion2x(t3,x3_1,y3_1,x3_2,y3_2);
+        double k4_2y = funcion2y(t3,x3_1,y3_1,x3_2,y3_2);
+        
+        double k1promx = (1.0/6.0)*(k1_1x + 2.0*k2_1x + 2.0*k3_1x + k4_1x);
+        double k2promx = (1.0/6.0)*(k1_2x + 2.0*k2_2x + 2.0*k3_2x + k4_2x);
+        
+        double k1promy = (1.0/6.0)*(k1_1y + 2.0*k2_1y + 2.0*k3_1y + k4_1y);
+        double k2promy = (1.0/6.0)*(k1_2y + 2.0*k2_2y + 2.0*k3_2y + k4_2y);
          
         
-        t[i]=t[i-1]+h;
-        x[i]=x[i-1]+h*k1prom;
-        v[i]=v[i-1]+h*k2prom;
+        t[i]=t[i-1]+dt;
+        
+        x_1[i]=x_1[i-1]+dt*k1promx;
+        y_1[i]=y_1[i-1]+dt*k1promy;
+            
+        x_2[i]=x_2[i-1]+dt*k2promx;
+        y_2[i]=y_2[i-1]+dt*k2promy;
+        
+        kutta <<t[i]<< " " << x_1[i] << " " << y_1[i] << " " << x_2[i]<< " " << y_2[i] << " " <<"\n";
 
-        cout << t[i] << endl;
-        cout << x[i] << endl;
-        cout << v[i] << endl;
-        */
+    }
 
         
-/*
-        cout << k1_1 << endl;
-        cout << k1_2 << endl;
-        cout << k2_1 << endl;
-        cout << k2_2 << endl;
-        cout << k3_1 << endl;
-        cout << k3_2 << endl;
-        cout << k4_1 << endl;
-        cout << k4_2 << endl;
-*/
+
 
         
 
