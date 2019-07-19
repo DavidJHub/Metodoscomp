@@ -8,17 +8,56 @@ double funcion1x(double t, double x, double vx);
 double funcion1y(double t, double y, double vy);
 double funcion2x(double t, double x, double y,double vx, double vy);
 double funcion2y(double t, double x, double y,double vx, double vy);
+void Euler (double tinicio,double tfin,int n);
+void LF(double tinicio,double tfin,int n);
+void RK(double tinicio,double tfin,int n);
 
 
 int main () {
-    int n=1000;
-    double tinicio=0;
-    double tfin=1;
-    double dt=(tfin-tinicio)/n;
+    Euler(0,1,1000);
+    LF(0,1,10000);
+    RK(0,2,1000);
+        
 
 
+        
 
     
+
+   return 0;
+}
+
+
+double funcion1x(double t, double x, double vx)
+{
+    return vx;
+}
+
+double funcion1y(double t, double y, double vy)
+{
+    return vy;
+}
+
+double funcion2x(double t, double x, double y,double vx, double vy)
+{
+    double g=39.478;//constante gravitacional en las unidades adecuadas
+    double m=1;
+    return -(g*m)*x/pow(sqrt((x*x+y*y)),3);
+}
+double funcion2y(double t, double x, double y,double vx, double vy)
+{
+    double g=39.478;
+    double m=1;
+    return -(g*m)*y/pow(sqrt((x*x+y*y)),3);
+}
+
+
+
+void Euler (double tinicio,double tfin,int n)
+{
+    
+        double dt=(tfin-tinicio)/n;
+
     double t[n];
     
     
@@ -47,28 +86,17 @@ int main () {
     
     ofstream euler;
     euler.open ("OrbitaEuler.txt");
-    
-    
-    
-    //###########################################euler#############################################################################
     for (int i=1;i<n;i++){
-        
 
         double x_prima_1 = funcion1x(t[i-1],x_1[i-1],x_2[i-1]);
-        double y_prima_1 = funcion1y(t[i-1],y_1[i-1],y_2[i-1]);
-            
+        double y_prima_1 = funcion1y(t[i-1],y_1[i-1],y_2[i-1]);    
             
         t[i] = t[i-1] + dt;
         x_1[i] = x_1[i-1] + dt*x_prima_1;
         y_1[i] = y_1[i-1] + dt*y_prima_1;
-        
-        
-
-            
-            
+                  
         double x_prima_2 = funcion2x(t[i-1],x_1[i-1],y_1[i-1],x_2[i-1],y_2[i-1]);
         double y_prima_2 = funcion2y(t[i-1],x_1[i-1],y_1[i-1],x_2[i-1],y_2[i-1]);
-            
  
         x_2[i] = x_2[i-1] + dt*x_prima_2;  
         y_2[i] = y_2[i-1] + dt*y_prima_2;
@@ -77,12 +105,21 @@ int main () {
         r[i]=sqrt(x_1[i]*x_1[i]+y_1[i]*y_1[i]);
         euler <<t[i]<< " " << x_1[i] << " " << y_1[i] << " " << x_2[i]<< " " << y_2[i] << " " << r[i] <<"\n";
     }
-    
-    
-    //##########################################leap frog
-     double tlf[n];
-    
-    
+}
+
+
+
+
+//
+//
+//
+//
+
+void LF(double tinicio,double tfin,int n)
+{
+    double dt=(tfin-tinicio)/n;
+
+    double tlf[n];    
     double x_1lf[n];
     double x_2lf[n];
     double y_1lf[n];
@@ -115,7 +152,7 @@ int main () {
     ofstream leapfrog;
     leapfrog.open ("OrbitaLF.txt");
     for (int i=2;i<n;i++){
-        tlf[i] = t[i-1] + dt;
+        tlf[i] = tlf[i-1] + dt;
 
         double x_prima_1 = funcion1x(tlf[i-1],x_1lf[i-1],x_2lf[i-1]);
         double y_prima_1 = funcion1y(tlf[i-1],y_1lf[i-1],y_2lf[i-1]);
@@ -138,12 +175,26 @@ int main () {
         rlf[i]=sqrt(x_1lf[i]*x_1lf[i]+y_1lf[i]*y_1lf[i]);
         leapfrog <<tlf[i]<< " " << x_1lf[i] << " " << y_1lf[i] << " " << x_2lf[i]<< " " << y_2lf[i] << " " << rlf[i] <<"\n";
     }
+}
+
+
+
+
+void RK(double tinicio,double tfin,int n)
+{
     
+        double dt=(tfin-tinicio)/n;
+
+        double t[n];
+    
+    
+        double x_1[n];
+        double x_2[n];
+        double y_1[n];
+        double y_2[n];
+    
+        double r[n];
         
-    //##################################Runge Kutta 4to orden
-        
-    
-    
     ofstream kutta;
     kutta.open ("OrbitaRK.txt");
     
@@ -161,6 +212,10 @@ int main () {
         
     for(int i=1;i<n;i++)
     {
+        
+
+        
+        
         double k1_1x = funcion1x(t[i-1],x_1[i-1],x_2[i-1]);
         double k1_1y = funcion1y(t[i-1],y_1[i-1],y_2[i-1]);
         double k1_2x = funcion2x(t[i-1],x_1[i-1],y_1[i-1],x_2[i-1],y_2[i-1]);
@@ -229,40 +284,4 @@ int main () {
         kutta <<t[i]<< " " << x_1[i] << " " << y_1[i] << " " << x_2[i]<< " " << y_2[i] << " " <<"\n";
 
     }
-
-        
-
-
-        
-
-
-        
-
-    
-
-   return 0;
-}
-
-
-double funcion1x(double t, double x, double vx)
-{
-    return vx;
-}
-
-double funcion1y(double t, double y, double vy)
-{
-    return vy;
-}
-
-double funcion2x(double t, double x, double y,double vx, double vy)
-{
-    double g=39.478;
-    double m=1;
-    return -(g*m)*x/pow(sqrt((x*x+y*y)),3);
-}
-double funcion2y(double t, double x, double y,double vx, double vy)
-{
-    double g=39.478;
-    double m=1;
-    return -(g*m)*y/pow(sqrt((x*x+y*y)),3);
 }
