@@ -93,7 +93,7 @@ plt.title("Velocidades en el plano")
 plt.xlabel("x (AU)/Anio")
 plt.ylabel("y (AU)/Anio")
 plt.show()
-plt.savefig("VxVy_lf_dt.png")
+plt.savefig("VxVy_LF_dt.png")
 plt.close()
 
 

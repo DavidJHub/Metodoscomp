@@ -27,27 +27,14 @@ from matplotlib.colors import LogNorm
 
 plt.figure()
 plt.imshow(np.abs(Transformada1), norm=LogNorm(vmin=2))
-plt.savefig("TransformadaSonrisa.png")
+plt.savefig("FFTSonrisa.png")
 plt.close()
 
 plt.figure()
 plt.imshow(np.abs(Transformada2), norm=LogNorm(vmin=2))
-plt.savefig("TransformadaSeria.png")
+plt.savefig("FFTSeria.png")
 plt.close()
-#def filtro2d (freq,sen,u):
-    #pasabajas
- #   filt=[]
-  #  for i in range (len(freq)):
-   #     if freq[i]>u or freq[i]<-u:
-    #        sen[i]=0
-     #       filt.append(sen[i])
-      #  else:
-       #     sen[i]=sen[i]
-        #    filt.append(sen[i])
-    #return np.asarray(filt)
 
-
-######## Filtro pasabajas para la sonrisa
 
 
 def filtrobajas2d(tfd,pt):
@@ -66,7 +53,7 @@ new1=filtrobajas2d(Transformada1,0.02)
 
 plt.figure()
 plt.imshow(np.abs(new1), norm=LogNorm(vmin=2))
-plt.savefig("Filtropasabajas.png")
+plt.savefig("ProcesoFiltropasabajas.png")
 plt.close()
 
 
@@ -78,7 +65,7 @@ imgfilt1=np.fft.ifft2(Transformada1)
 
 plt.figure()
 plt.imshow(np.abs(imgfilt1))
-plt.savefig("Imagenpasabajas.png")
+plt.savefig("ProcesoImagenpasabajas.png")
 plt.close()
 
 
@@ -111,7 +98,7 @@ filtroaltas2d(Transformada2,0.001)
 
 plt.figure()
 plt.imshow(np.abs(Transformada2), norm=LogNorm(vmin=2))
-plt.savefig("FiltroPasaAltas.png")
+plt.savefig("ProcesoFiltroPasaAltas.png")
 plt.close()
 
 
@@ -121,7 +108,7 @@ imgfilt2=np.fft.ifft2(Transformada2)
 
 plt.figure()
 plt.imshow(np.abs(imgfilt2))
-plt.savefig("ImagenPasaAltas.png")
+plt.savefig("ProcesoImagenPasaAltas.png")
 
 
 ######## Imagen compuesta a partir de la suma de las dos imagenes filtradas
@@ -130,5 +117,5 @@ plt.savefig("ImagenPasaAltas.png")
 imgfinal=imgfilt1+imgfilt2
 plt.figure()
 plt.imshow(np.abs(imgfinal))
-plt.savefig("ImagenCompuesta.png")
+plt.savefig("ImHybrid.png")
 
