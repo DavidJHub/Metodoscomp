@@ -4,7 +4,7 @@ import random
 
 
 def caminata(umbral,punto):
-        opciones=[0,1]
+        opciones=["up","down"]
         
         X=0
         pasos=0
@@ -13,15 +13,15 @@ def caminata(umbral,punto):
             el=random.choice(opciones)
             if X==punto:
                     break
-            if el==0:
+            if el=="up":
                 X=X+1
-                recorrido.append(X)
+                #recorrido.append(X)
                 pasos=pasos+1
                 
-            if el==1:
+            if el=="down":
                 X=X-1
                 pasos=pasos+1
-                recorrido.append(X)
+                #recorrido.append(X)
 
         return pasos
 
@@ -29,16 +29,17 @@ def caminata(umbral,punto):
 def iterar(iteraciones):
     ret=[]
     for j in range (iteraciones):
-        ret.append(np.asarray(caminata(200,1)))
+        ret.append(np.asarray(caminata(1000,1)))
     return np.asarray(ret)
 
 
-print (iterar(1000))
+print (iterar(200))
 
 plt.figure()
 plt.hist(iterar(200),bins=100,color="red")
+plt.xlabel("Pasos")
+plt.ylabel("Caminatas")
 plt.savefig("Caminata.png")
-
 
 def ejercicio():
     primera=iterar(50)
