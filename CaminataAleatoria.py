@@ -29,18 +29,29 @@ def caminata(umbral,punto):
 def iterar(iteraciones):
     ret=[]
     for j in range (iteraciones):
-        ret.append(np.asarray(caminata(1000,1)))
+        ret.append(np.asarray(caminata(200,1)))
     return np.asarray(ret)
+
 
 print (iterar(1000))
 
 plt.figure()
-plt.hist(iterar(1000),bins=100,color="red")
+plt.hist(iterar(200),bins=100,color="red")
 plt.savefig("Caminata.png")
 
 
-
-
+def ejercicio():
+    primera=iterar(50)
+    segunda=iterar(100)
+    tercera=iterar(500)
+    cuarta=iterar(1000)
+    f= open("tablaCaminata.txt","w+")
+    f.write("Iteraciones" + " " + "Promedio"+"\r\n")
+    f.write(str(50) + " " + str(np.mean(primera))+"\r\n")
+    f.write(str(100) + " " + str(np.mean(segunda))+"\r\n")
+    f.write(str(500) + " " + str(np.mean(tercera))+"\r\n")
+    f.write(str(1000) + " " + str(np.mean(cuarta))+"\r\n")
+print (ejercicio())
 
 
 
